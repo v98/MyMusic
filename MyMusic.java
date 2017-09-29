@@ -24,7 +24,7 @@ class Song implements Serializable {
 		return dur;
 	}
 
-	@Override
+	//@Override
 	public String toString(){
 		return "Song: "+name+" Singer: "+singer+" Duration: "+dur;
 	}
@@ -36,24 +36,27 @@ class Song implements Serializable {
 
 public class MyMusic{
 
-	public static void show(String fname)throws Exception{
+	public static String show(String fname)throws Exception{
+		String output="";
 		ObjectInputStream in=new ObjectInputStream(new FileInputStream(fname));
 		int count=0;
 		while(true){
 			try{
 			Song s=(Song)in.readObject();
 			count+=1;
-			System.out.println(s);
+			output=output+s.toString()+"\n";
 			}
 			catch(EOFException e){
 				if(count==0){
-					System.out.println("No Song Exist");
+					output="Songs do not Exist";
 				}
 				break;
 			}
 
 		}
 		in.close();
+		return output;
+		
 	}
 
 	public static void add(String fname,String name,String singer,int dur)throws FileNotFoundException,IOException,ClassNotFoundException{
@@ -120,7 +123,7 @@ public class MyMusic{
 			}
 			catch(EOFException e){
 				if(check==0){
-					throw new SongNotFoundException("Song not found");
+					System.out.println("Song not found");
 				}
 				break;
 			}
@@ -148,51 +151,54 @@ public class MyMusic{
 		in2.close();
 	}
 
-	public static void search(String fname,String name)throws SongNotFoundException,FileNotFoundException,IOException,ClassNotFoundException{
+	public static String search(String fname,String name)throws SongNotFoundException,FileNotFoundException,IOException,ClassNotFoundException{
 		// ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream(fname),true);
 		// out.writeObject(temp);
 		// out.close();
 		
 		ObjectInputStream in=new ObjectInputStream(new FileInputStream(fname));
 		ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("temp.txt"));
-		int count=0;
-		int check=0;
+		
 		while(true){
 			try{
 				Song s=(Song)in.readObject();
-				if(name.equals(s.getSong())){
-					System.out.println(s);
-					
-					check=1;
-				}
+				
 				out.writeObject(s);
+			}
+			catch(EOFException e){
+				break;
+			}
+		}
+
+		in.close();
+		
+		int check=0;
+		ObjectInputStream in2=new ObjectInputStream(new FileInputStream("temp.txt"));
+		//ObjectOutputStream out2=new ObjectOutputStream(new FileOutputStream(fname));
+		while(true){
+			try{
+				Song s=(Song)in2.readObject();
+				if(name.equals(s.getSong())){
+					check=1;
+					return s.toString();
+					
+					
+				}
+				//out.writeObject(s);
 
 			}
 			catch(EOFException e){
 				if(check==0){
-					throw new SongNotFoundException("Song not found");
+					return "Song not found";
 				}
-				break;
 			}
 
 		}
-		in.close();
+		//in2.close();
+		
+		
 
-		ObjectInputStream in2=new ObjectInputStream(new FileInputStream("temp.txt"));
-		ObjectOutputStream out2=new ObjectOutputStream(new FileOutputStream(fname));
-
-		while(true){
-			try{
-				Song s=(Song)in2.readObject();
-				count+=1;
-				out2.writeObject(s);
-			}
-			catch(EOFException e){
-				break;
-			}
-		}
-
-		in2.close();
+		
 	}
 
 	public static void menu1()throws IOException,Exception{
@@ -236,8 +242,8 @@ public class MyMusic{
 			switch(n){
 				case 1:add(fname,data[1],data[2],Integer.parseInt(data[3]));break;
 				case 2:delete(fname,data[1]);break;
-				case 3:search(fname,data[1]);break;
-				case 4:show(fname);break;
+				case 3:System.out.println(search(fname,data[1]));break;
+				case 4:System.out.println(show(fname));break;
 				case 5:menu1();break;
 				case 6:check=1;break;
 
@@ -251,21 +257,15 @@ public class MyMusic{
 
 	public static void main(String[] args) throws IOException ,Exception{
 
-		//------------------------creating a playlist--------------------------------
-		FileOutputStream p1=new FileOutputStream("playlist1.txt");
-		ObjectOutputStream out=new ObjectOutputStream(p1);
-		BufferedReader sc=new BufferedReader(new InputStreamReader(System.in));
-		int n=Integer.parseInt(sc.readLine());
-		for(int i=0;i<n;i++){
-			String[] data=sc.readLine().split(" ");
-			String name =data[0];
-			String singer=data[1];
-			int dur=Integer.parseInt(data[2]);
-			out.writeObject(new Song(name,singer,dur));
-
-		}
-		out.flush();
-		//---------------------------------------------------------------------------
+	//------------------------creating a playlist--------------------------------
+//		FileOutputStream p1=new FileOutputStream("playlist1.txt");
+//		ObjectOutputStream out=new ObjectOutputStream(p1);
+//		BufferedReader sc=new BufferedReader(new InputStreamReader(System.in));
+//		out.writeObject(new Song("Thunder","ImagineDragons",370));
+//		out.writeObject(new Song("AllTimeLow","JohnBellion",400));
+//		out.writeObject(new Song("Yellow","Coldplay",473));
+//		out.flush();
+	//---------------------------------------------------------------------------
 		menu1();
 		
 		
