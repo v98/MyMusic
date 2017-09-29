@@ -275,13 +275,13 @@ public class MyMusic {
 
 		// ------------------------creating a
 		// playlist--------------------------------
-		FileOutputStream p1 = new FileOutputStream("./src/playlist1.txt");
-		ObjectOutputStream out = new ObjectOutputStream(p1);
-		BufferedReader sc = new BufferedReader(new InputStreamReader(System.in));
-		out.writeObject(new Song("Thunder", "ImagineDragons", 370));
-		out.writeObject(new Song("AllTimeLow", "JohnBellion", 400));
-		out.writeObject(new Song("Yellow", "Coldplay", 473));
-		out.flush();
+// 		FileOutputStream p1 = new FileOutputStream("./src/playlist1.txt");
+// 		ObjectOutputStream out = new ObjectOutputStream(p1);
+// 		BufferedReader sc = new BufferedReader(new InputStreamReader(System.in));
+// 		out.writeObject(new Song("Thunder", "ImagineDragons", 370));
+// 		out.writeObject(new Song("AllTimeLow", "JohnBellion", 400));
+// 		out.writeObject(new Song("Yellow", "Coldplay", 473));
+// 		out.flush();
 		// ---------------------------------------------------------------------------
 		menu1();
 
